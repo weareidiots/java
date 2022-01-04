@@ -1,0 +1,15 @@
+export HADOOP_CLASSPATH=$(hadoop classpath)
+echo $HADOOP_CLASSPATH
+start-all.sh
+jps
+hdfs dfs -mkdir /wordcount/
+hdfs dfs -mkdir /wordcount/input/
+hdfs dfs -put '/home/hdoop/wordcount/input.txt' /wordcount/input/
+hdfs dfs -cat /wordcount/input/*
+cd /home/hdoop/wordcount
+pwd
+ls
+javac -classpath ${HADOOP_CLASSPATH} -d  '/home/hdoop/wordcount/classes' '/home/hdoop/wordcount/wordcount.java'
+jar -cvf wordcount.jar -C '/home/hdoop/wordcount/classes'/  .
+hadoop jar '/home/hdoop/wordcount/wordcount.jar' wordcount /wordcount/input /wordcount/output
+hdfs dfs -cat /wordcount/output/*
